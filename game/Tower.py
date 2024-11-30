@@ -15,6 +15,9 @@ class Tower:
         self.popped = 0
         self.screen = screen
         self.lines = []
+        self.dmageU = 0
+        self.pierceU = 0
+        self.attackU = 0
 
 
     def place_tower(self, x, y):
@@ -67,5 +70,26 @@ class Tower:
                 self.lines.remove(line)
             else:
                 pygame.draw.line(self.screen, "black", line["tower_pos"], line["enemy_pos"])
+
+    # retuns a dict of tower info and upgrade amount
+    def get_upgrades(self):
+        return {
+            "damage": [self.damage, self.dmageU], 
+            "pierce": [self.pierce, self.pierceU],
+            "attack": [self.attack_speed, self.attackU]
+        }
+    
+    # upgrades based on user click 
+    def upgrade_tower(self, u):
+        if u == 1:
+            self.damage = self.damage + 1 
+            self.dmageU += 1
+        elif u == 2:
+            self.pierce = self.pierce + 1
+            self.pierceU += 1
+        else:
+            self.attack_speed = self.attack_speed * 0.75
+            self.attackU += 1
+
 
             

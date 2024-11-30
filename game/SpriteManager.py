@@ -44,6 +44,7 @@ class SpriteManager():
         self.sprite.add_sprite("heart", (windowSize[0]-150, 60), (40,40))
         self.bg = self.sprite.get_bg()
         self.play = self.sprite.get_play()
+        self.upgrade = self.sprite.create_indipendent((0, -2000), (150, 300))
         
         self.menue.append(self.sprite.add_sprite("square", (windowSize[0]-110, 150),(100,100)))
         self.menue.append(self.sprite.add_sprite("pentagon", (windowSize[0]-110, 255),(100,100)))

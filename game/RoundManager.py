@@ -11,6 +11,7 @@ class RoundManager:
         self.round_in_progress = False
         self.last_spawn_time = 0
         self.did_exit = False
+        self.upgrade_shown = False
         self.tierSpeed = {
             0: 2,
             1: 3,
@@ -36,26 +37,23 @@ class RoundManager:
         self.sprite_manager.spawn_rounds(round_number)  # Populate sprite_queue
         self.round_in_progress = True
         enemy, tier, spacing = self.sprite_manager.sprite_queue[0]
-        self.sprite_manager.sprite_queue.pop(0)  # Remove enemy from queue
+        self.sprite_manager.sprite_queue.pop(0)  
         start_position = self.track_path[0]
         self.sprite_manager.sprite.change_location(enemy, *start_position)
-        self.active_enemies.append((enemy, tier))  # Add to active enemies
-        self.last_spawn_time = time.time() * 1000 # Current time in milliseconds
+        self.active_enemies.append((enemy, tier))  
+        self.last_spawn_time = time.time() * 1000 
 
+    # spawns enemy at the start of the track when the time has ellapsed
     def spawn_next_enemy(self):
-        """
-        Spawn the next enemy if spacing interval has elapsed.
-        """
         if self.sprite_manager.sprite_queue:
-            current_time = time.time() * 1000  # Current time in milliseconds
-            enemy, tier, spacing = self.sprite_manager.sprite_queue[0]  # Peek the first enemy in the queue
-            
+            current_time = time.time() * 1000  
+            enemy, tier, spacing = self.sprite_manager.sprite_queue[0] 
             if current_time - self.last_spawn_time >= spacing:
-                self.sprite_manager.sprite_queue.pop(0)  # Remove enemy from queue
+                self.sprite_manager.sprite_queue.pop(0)  
                 start_position = self.track_path[0]
                 self.sprite_manager.sprite.change_location(enemy, *start_position)
-                self.active_enemies.append((enemy, tier))  # Add to active enemies
-                self.last_spawn_time = current_time  # Update last spawn time
+                self.active_enemies.append((enemy, tier))  
+                self.last_spawn_time = current_time  
             
     def endRound(self):
         self.round_in_progress = False
@@ -144,6 +142,14 @@ class RoundManager:
     def next_round(self):
         self.current_round += 1
         self.start_rounds(self.current_round)
+
+    def manage_upgrade(self):
+        if self.upgrade_shown:
+            self.sprite_manager.sprite.change_location(self.sprite_manager.upgrade, 0, -2000)
+            self.upgrade_shown != self.upgrade_shown
+        else:
+            self.sprite_manager.sprite.change_location(self.sprite_manager.upgrade, 0, 200)
+            self.upgrade_shown != self.upgrade_shown
         
 
 

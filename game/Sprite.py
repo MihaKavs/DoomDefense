@@ -16,6 +16,8 @@ class Sprite(pygame.sprite.Sprite):
         self.circles = pygame.image.load(circle_path)
         play_path = os.path.join(base_path, ".." ,"assets", "play.png")
         self.play = pygame.image.load(play_path)
+        upgrade_path = os.path.join(base_path, ".." ,"assets", "upgrade.png")
+        self.upgrade = pygame.image.load(upgrade_path)
         self.sprite_dict = {
             "pentagon": (15, 0, 87, 80),
             "hexagon": (123, 10, 95, 95),
@@ -123,6 +125,18 @@ class Sprite(pygame.sprite.Sprite):
         self.index += 1
         sprite.distance = 0  
         self.group.add(sprite)
+
+    def create_indipendent(self, pos, size):
+        image = self.upgrade
+        image = pygame.transform.scale(image, size)
+        sprite = pygame.sprite.Sprite()
+        sprite.image = image
+        sprite.rect = image.get_rect(topleft=pos)
+        sprite.index = self.index
+        self.index += 1
+        sprite.distance = 0  
+        self.group.add(sprite)
+        return sprite
 
         
 

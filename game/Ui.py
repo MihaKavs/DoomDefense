@@ -26,5 +26,28 @@ class Ui():
         self.screen.blit(self.my_font.render(str(self.money_manager.money), False, (0,0,0)), (1200, 12))
         self.screen.blit(self.my_font.render(str(self.round_manager.damage_manager.hp), False, (0,0,0)), (1200, 50))
 
+    def print_upgrades(self, dict):
+        if(dict):
+            damage, damageU = dict.get("damage")
+            pierce, pierceU = dict.get("pierce")
+            attack, attackU = dict.get("attack")
+            self.screen.blit(self.my_font.render("Damage", False, (0,0,0)), (10, 210))
+            self.screen.blit(self.my_font.render("Pierce", False, (0,0,0)), (10, 310))
+            self.screen.blit(self.my_font.render("AttSpeed", False, (0,0,0)), (10, 410))
+            self.screen.blit(self.my_font.render(str(damageU * 50 + 50), False, (0,0,0)), (10, 250))
+            self.screen.blit(self.my_font.render(str(pierceU * 50 + 50), False, (0,0,0)), (10, 350))
+            self.screen.blit(self.my_font.render(str(attackU * 50 + 50), False, (0,0,0)), (10, 450))
+
+    def get_upgrade(self, pos):
+        if pos[1] < 300:
+            return 1
+        elif pos[1] > 400:
+            return 3
+        else:
+            return 2
+        
+
+
+
         
 

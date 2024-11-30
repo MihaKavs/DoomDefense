@@ -23,7 +23,8 @@ isDragging = False
 running = True
 name = ""
 dragging_sprite = None 
-
+selected_tower = None
+upgrades = {}
 money_manager = Money(tower_manager, round_manager)
 
 Ui_manager = Ui(round_manager, money_manager, screen)
@@ -36,7 +37,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:
             pos = pygame.mouse.get_pos()
             if isDragging:
-                if pos[0] > 1100:
+                if pos[0] > 1100 or pos[0] < 150:
                     pass
                 else:
                     tower_rect = pygame.Rect(pos[0] - 50, pos[1] - 50, 100, 100)
@@ -65,6 +66,20 @@ while running:
             if pos[0] > 1200 and pos[1] > 620 and round_manager.round_in_progress == False:
                 round_manager.start_rounds(roundNumber)
                 roundNumber += 1
+            elif pos[0] < 150 and pos[1] > 200 and pos[1] < 500:
+                u = Ui_manager.get_upgrade(pos)
+                if money_manager.can_upgrade(selected_tower.get_upgrades(), u):
+                    selected_tower.upgrade_tower(u)
+                    money_manager.spend_money(money_manager.upgrade_cost)
+                
+            else:
+                for tower in tower_manager.tower_list:
+                    if tower_rect.colliderect(tower.sprite.rect):
+                        upgrades = tower.get_upgrades()
+                        round_manager.manage_upgrade()
+                        selected_tower = tower
+
+
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_1:
                 isDragging = True
@@ -82,7 +97,8 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
     screen.blit(round_manager.sprite_manager.bg, (0, 0))
-
+    if upgrades: 
+        upgrades = selected_tower.get_upgrades()
     # Update and draw game elements
     round_manager.update()
     tower_manager.attack_enemies(round_manager.active_enemies)
@@ -92,7 +108,7 @@ while running:
     money_manager.earn_money(tower_manager.poppedAmount)
     tower_manager.draw_lines()
     Ui_manager.print_shit()
-
+    Ui_manager.print_upgrades(upgrades)
 
     # Draw towers with borders around their rects
     for tower in tower_manager.tower_list:
