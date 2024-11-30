@@ -73,8 +73,9 @@ while running:
                     money_manager.spend_money(money_manager.upgrade_cost)
                 
             else:
+                mouse_rect = pygame.Rect(pos[0], pos[1], 1, 1)
                 for tower in tower_manager.tower_list:
-                    if tower_rect.colliderect(tower.sprite.rect):
+                    if mouse_rect.colliderect(tower.sprite.rect):
                         upgrades = tower.get_upgrades()
                         round_manager.manage_upgrade()
                         selected_tower = tower
