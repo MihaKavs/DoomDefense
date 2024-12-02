@@ -5,6 +5,7 @@ class KeyHandler:
         self.is_dragging = False
         self.dragging_sprite = None
         self.selected_tower_name = None
+        self.paused = False
 
     # handles wich key is pressed
     def handle_keydown(self, key):
@@ -14,6 +15,9 @@ class KeyHandler:
             self.start_dragging("pentagon")
         elif key == pygame.K_3:
             self.start_dragging("hexagon")
+        elif key == pygame.K_p:
+            self.paused = True
+
 
     # starts dragging handling
     def start_dragging(self, name):

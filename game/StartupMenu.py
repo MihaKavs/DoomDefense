@@ -9,18 +9,21 @@ class StartupMenu:
 
     def draw(self):
         # Fill the background with a color
-        self.screen.fill((0, 0, 0))  # Black background
+        self.screen.fill((200, 200, 200))  # Light gray background
+        
         # Display title
         title_text = self.font.render("Tower Defense", True, (255, 255, 255))
-        self.screen.blit(title_text, (400, 100))
+        self.screen.blit(title_text, (400, 100))  # Center title
         
         # Draw the buttons
-        pygame.draw.rect(self.screen, (0, 255, 0), self.start_button)  # Start button
-        pygame.draw.rect(self.screen, (255, 0, 0), self.exit_button)   # Exit button
+        pygame.draw.rect(self.screen, (0, 255, 0), self.start_button)  # Green start button
+        pygame.draw.rect(self.screen, (255, 0, 0), self.exit_button)   # Red exit button
         
         # Add button texts
         start_text = self.font.render("Start Game", True, (255, 255, 255))
         exit_text = self.font.render("Exit", True, (255, 255, 255))
+
+        # Center the text in the buttons
         self.screen.blit(start_text, (self.start_button.centerx - start_text.get_width() // 2, self.start_button.centery - start_text.get_height() // 2))
         self.screen.blit(exit_text, (self.exit_button.centerx - exit_text.get_width() // 2, self.exit_button.centery - exit_text.get_height() // 2))
 
@@ -32,7 +35,10 @@ class StartupMenu:
         return None
 
     def handle_menu(self):
-        # Event handling and menu logic
+        # Continuously draw the menu
+        self.draw()  # Draw the menu elements
+        pygame.display.flip()  # Update the display
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return "exit"

@@ -4,6 +4,7 @@ class Money:
         self.round_manager = round_manager
         self.money = 600  # Initial amount of money
         self.upgrade_cost = 0
+        self.total_spent = 0
 
     # add money amount of poops
     def earn_money(self, amount):
@@ -13,6 +14,7 @@ class Money:
     def spend_money(self, amount):
         if self.money >= amount:
             self.money -= amount
+            self.total_spent += amount
             return True
         return False
     

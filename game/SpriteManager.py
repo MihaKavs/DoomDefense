@@ -20,6 +20,7 @@ class SpriteManager():
                     self.rounds[round_key].append(row)
                 else:
                     self.rounds[round_key] = [row]
+        print(len(self.rounds))
 
     # spawns the round based on rounds.csv
     def spawn_rounds(self, round):
