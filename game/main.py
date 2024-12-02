@@ -3,13 +3,23 @@ from RoundManager import RoundManager
 from TowerManager import TowerManager
 from Ui import Ui
 from Money import Money
+from AudioManager import AudioManager
+from TowerPlacer import TowerPlacementManager
+from KeyHandler import KeyHandler
+from StartMenu import StartupMenu
 
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 
-
+start_menu = StartupMenu(screen)
+game_started = False
+while not game_started:
+    if start_menu.handle_menu() == "start":
+        game_started = True
+    elif start_menu.handle_menu() == "exit":
+        running = False
 
 roundNumber = 1
 round_manager = RoundManager()
@@ -29,39 +39,25 @@ money_manager = Money(tower_manager, round_manager)
 
 Ui_manager = Ui(round_manager, money_manager, screen)
 
+audio_manager = AudioManager()
+audio_manager.play_music()
+
+tower_placement_manager = TowerPlacementManager(money_manager, tower_manager, round_manager)
+
+key_handler = KeyHandler(tower_manager)
+
 while running:
     # poll for events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONUP:
+        elif event.type == pygame.MOUSEBUTTONUP:   
             pos = pygame.mouse.get_pos()
-            if isDragging:
-                if pos[0] > 1100 or pos[0] < 150:
-                    pass
+            if key_handler.is_dragging:
+                if tower_placement_manager.handle_placement(key_handler.selected_tower_name, pos):
+                    key_handler.reset_dragging()
                 else:
-                    tower_rect = pygame.Rect(pos[0] - 50, pos[1] - 50, 100, 100)
-                    collision_detected = False
-                    for sprite in round_manager.sprite_manager.sprite.group:
-                        if tower_rect.colliderect(sprite.rect):
-                            collision_detected = True
-                            break
-                    for tower in tower_manager.tower_list:
-                        if tower_rect.colliderect(tower.sprite.rect):
-                            collision_detected = True
-                            break
-                    tower_cost = 0
-                    if name == "square":
-                        tower_cost = 100
-                    elif name == "hexagon":
-                        tower_cost = 400
-                    else:
-                        tower_cost = 250
-                    if money_manager.can_cpend_money(tower_cost) and collision_detected == False:
-                        tower_manager.add_tower(name, pos[0] - 50, pos[1] - 50)
-                        money_manager.spend_money(tower_cost)
-                isDragging = False
-                dragging_sprite = None  
+                    key_handler.reset_dragging()
 
             if pos[0] > 1200 and pos[1] > 620 and round_manager.round_in_progress == False:
                 round_manager.start_rounds(roundNumber)
@@ -82,18 +78,8 @@ while running:
 
 
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_1:
-                isDragging = True
-                name = "square"
-                dragging_sprite = tower_manager.get_tower_sprite(name)  # Get sprite for selected tower
-            elif event.key == pygame.K_2:
-                isDragging = True
-                name = "pentagon"
-                dragging_sprite = tower_manager.get_tower_sprite(name)
-            elif event.key == pygame.K_3:
-                isDragging = True
-                name = "hexagon"
-                dragging_sprite = tower_manager.get_tower_sprite(name)
+            key_handler.handle_keydown(event.key)
+
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
@@ -102,34 +88,21 @@ while running:
         upgrades = selected_tower.get_upgrades()
     # Update and draw game elements
     round_manager.update()
-    tower_manager.attack_enemies(round_manager.active_enemies)
+    tower_manager.update_towers(round_manager.active_enemies, screen)
     Ui_manager.update_values()
     round_manager.sprite_manager.sprite.draw(screen)
-    tower_manager.sprite.draw(screen)
-    money_manager.earn_money(tower_manager.poppedAmount)
-    tower_manager.draw_lines()
     Ui_manager.print_shit()
     Ui_manager.print_upgrades(upgrades)
+    audio_manager.update_music_loop(tower_manager.poppedAmount)
+
 
     # Draw towers with borders around their rects
-    for tower in tower_manager.tower_list:
-        screen.blit(tower.sprite.image, tower.sprite.rect.topleft)
-        pygame.draw.rect(screen, "red", tower.sprite.rect, 3)
-
-        # Draw the tower's attack radius
-        radius, position = tower.get_radius()
-        pygame.draw.circle(
-            screen, 
-            (0, 255, 0),  # Green color
-            (int(position[0] + 50), int(position[1] + 50)),  # Center of the tower
-            radius,  # Radius size
-            1  # Thickness of the circle
-        )
+    
 
     # Display the dragging sprite following the mouse
-    if isDragging and dragging_sprite:
+    if key_handler.is_dragging and key_handler.dragging_sprite:
         mouse_pos = pygame.mouse.get_pos()
-        screen.blit(dragging_sprite, (mouse_pos[0] - 50, mouse_pos[1] - 50))
+        screen.blit(key_handler.dragging_sprite, (mouse_pos[0] - 50, mouse_pos[1] - 50))
 
     # Display the start button if no round is in progress
     if not round_manager.round_in_progress:
@@ -140,3 +113,6 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
+
+
