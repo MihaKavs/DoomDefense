@@ -8,8 +8,8 @@ class Leaderboard:
         self.file_name = file_name
         self.scores = []
         self.load_scores()
-        self.restart_button = pygame.Rect(900, 300, 200, 200)
-        self.exit_button = pygame.Rect(900, 600, 200, 200)
+        self.restart_button = pygame.Rect(900, 200, 200, 50)
+        self.exit_button = pygame.Rect(900, 300, 200, 50)
 
     # loads scores from fole or make an empty list
     def load_scores(self):
@@ -39,7 +39,7 @@ class Leaderboard:
     def draw(self):
         self.screen.fill((0, 0, 0))  # Fill with black background
         title_text = self.font.render("Leaderboard", True, (255, 255, 255))
-        self.screen.blit(title_text, (400, 50))
+        self.screen.blit(title_text, (100, 50))
         pygame.draw.rect(self.screen, (0, 255, 0), self.restart_button)
         restart_text = self.font.render("Restart", True, (255,255,255))
         self.screen.blit(restart_text,(self.restart_button.x + 30, self.restart_button.y + 10))
@@ -50,9 +50,8 @@ class Leaderboard:
         y_offset = 150
         for entry in self.scores:
             score_text = self.font.render(f"{entry['name']} - Round: {entry['round']} | Money Spent: {entry['money_spent']}", True, (255, 255, 255))
-            self.screen.blit(score_text, (400, y_offset))
+            self.screen.blit(score_text, (100, y_offset))
             y_offset += 60  # Space out the scores
-        # TODO fix ui positioning
         pygame.display.flip()
 
     def handle_click(self, pos):

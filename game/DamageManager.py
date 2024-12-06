@@ -19,6 +19,5 @@ class DamageManager:
             return 0
         else:
             return self.hp
-        # TODO when all lives lost end game and save score
         
         

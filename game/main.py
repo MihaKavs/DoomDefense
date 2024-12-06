@@ -15,6 +15,9 @@ pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 
+audio_manager = AudioManager()
+audio_manager.play_music()
+
 start_menu = StartupMenu(screen)
 
 game_started = False
@@ -50,14 +53,15 @@ money_manager = Money(tower_manager, round_manager)
 
 Ui_manager = Ui(round_manager, money_manager, screen)
 
-audio_manager = AudioManager()
-audio_manager.play_music()
+
 
 tower_placement_manager = TowerPlacementManager(money_manager, tower_manager, round_manager)
 
 key_handler = KeyHandler(tower_manager)
 
 pause_menu = PauseMenu(screen)
+
+leaderboard = Leaderboard(screen)
 
 while running:
     # poll for events
@@ -74,7 +78,7 @@ while running:
 
             if pos[0] > 1200 and pos[1] > 620 and round_manager.round_in_progress == False:
                 if len(round_manager.sprite_manager.rounds) < roundNumber:
-                    # TODO save the score and print it
+                    leaderboard.add_score(start_menu.name, roundNumber - 1, money_manager.total_spent)
                     running = False
                     break
                 round_manager.start_rounds(roundNumber)
@@ -126,6 +130,10 @@ while running:
 
     audio_manager.update_music_loop(tower_manager.poppedAmount)
 
+    if round_manager.damage_manager.hp == 0:
+        leaderboard.add_score(start_menu.name, roundNumber - 1, money_manager.total_spent)
+        running = False
+
     # Display the dragging sprite following the mouse
     if key_handler.is_dragging and key_handler.dragging_sprite and not key_handler.paused:
         mouse_pos = pygame.mouse.get_pos()
@@ -139,7 +147,7 @@ while running:
     pygame.display.flip()
     clock.tick(60)
 
-leaderboard = Leaderboard(screen)
+
 running = True
 while running:
     leaderboard.draw()

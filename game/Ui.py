@@ -23,8 +23,10 @@ class Ui():
         self.screen.blit(self.my_font.render("100", False, (0,0,0)), (1210, 140))
         self.screen.blit(self.my_font.render("200", False, (0,0,0)), (1210, 250))
         self.screen.blit(self.my_font.render("300", False, (0,0,0)), (1210, 350))
+        self.screen.blit(self.my_font.render("Round:", False, (0,0,0)), (10, 10))
         self.screen.blit(self.my_font.render(str(self.money_manager.money), False, (0,0,0)), (1200, 12))
         self.screen.blit(self.my_font.render(str(self.round_manager.damage_manager.hp), False, (0,0,0)), (1200, 50))
+        self.screen.blit(self.my_font.render(str(self.round_manager.current_round), False, (0,0,0)), (10, 50))
 
     def print_upgrades(self, dict):
         if(dict):

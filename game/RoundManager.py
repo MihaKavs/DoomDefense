@@ -22,11 +22,11 @@ class RoundManager:
         }
         self.health_dict = {
             0: 1,
-            1: 2,
-            2: 3,
-            3: 3,
-            4: 5,
-            5: 15
+            1: 4,
+            2: 8,
+            3: 8,
+            4: 6,
+            5: 20
         }
         self.sprite_manager.initiateBasic()
         self.damage_manager = DamageManager()
@@ -135,7 +135,7 @@ class RoundManager:
             self.spawn_next_enemy()
             self.update_enemy_positions()
             # End the round if no enemies are left
-            if not self.active_enemies:
+            if not self.active_enemies and len(self.sprite_manager.sprite_queue) == 0:
                 self.round_in_progress = False
 
     #start next round
