@@ -70,12 +70,14 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONUP:   
             pos = pygame.mouse.get_pos()
+            # tower placement
             if key_handler.is_dragging:
                 if tower_placement_manager.handle_placement(key_handler.selected_tower_name, pos):
                     key_handler.reset_dragging()
+                    audio_manager.play_thump()
                 else:
                     key_handler.reset_dragging()
-
+            # play button
             if pos[0] > 1200 and pos[1] > 620 and round_manager.round_in_progress == False:
                 if len(round_manager.sprite_manager.rounds) < roundNumber:
                     leaderboard.add_score(start_menu.name, roundNumber - 1, money_manager.total_spent)
@@ -83,11 +85,14 @@ while running:
                     break
                 round_manager.start_rounds(roundNumber)
                 roundNumber += 1
+
+            # upgrade tower
             elif pos[0] < 150 and pos[1] > 200 and pos[1] < 500:
                 u = Ui_manager.get_upgrade(pos)
                 if money_manager.can_upgrade(selected_tower.get_upgrades(), u):
                     selected_tower.upgrade_tower(u)
                     money_manager.spend_money(money_manager.upgrade_cost)
+                    audio_manager.play_cha_ching()
 
             elif key_handler.paused:
                 clicked = pause_menu.handle_click(pos)
@@ -130,7 +135,7 @@ while running:
 
     audio_manager.update_music_loop(tower_manager.poppedAmount)
 
-    if round_manager.damage_manager.hp == 0:
+    if round_manager.damage_manager.hp <= 0:
         leaderboard.add_score(start_menu.name, roundNumber - 1, money_manager.total_spent)
         running = False
 

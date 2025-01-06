@@ -7,6 +7,10 @@ class AudioManager:
         base_path = os.path.dirname(__file__)
         pop = os.path.join(base_path, ".." ,"assets", "pop.mp3") 
         self.pop_effect = pygame.mixer.Sound(pop)
+        cha_ching = os.path.join(base_path, ".." ,"assets", "cha_ching.mp3")
+        self.cha_ching = pygame.mixer.Sound(cha_ching)
+        thump = os.path.join(base_path, ".." ,"assets", "thump.mp3")
+        self.thump = pygame.mixer.Sound(thump)
         hypnosis = os.path.join(base_path, ".." ,"assets", "hypnosis.mp3") 
         chokehold = os.path.join(base_path, ".." ,"assets", "chokehold.mp3") 
         self.music_playlist = [hypnosis, chokehold]
@@ -17,6 +21,15 @@ class AudioManager:
     #plays pop
     def play_pop(self):
         self.pop_effect.play()
+
+    # plays cha_ching
+    def play_cha_ching(self):
+        self.cha_ching.play()
+
+
+    # plays thump
+    def play_thump(self):
+        self.thump.play()
 
     # play current music and loop through all tracks
     def play_music(self):
